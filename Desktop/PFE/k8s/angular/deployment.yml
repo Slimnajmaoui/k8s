@@ -15,7 +15,7 @@ spec:  # What state you desire for the object
       containers:
         - name: angular-k8s-deployment
           # image: angular-app:latest
-          image: rabii1990/frontend:angular
+          image: nejmaoui/frontend:angular
           imagePullPolicy: Always
           env:
             - name: baseUrl
