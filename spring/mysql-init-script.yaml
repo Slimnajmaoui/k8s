@@ -1,0 +1,129 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-init-script
+data:
+  init.sql: |
+    -- phpMyAdmin SQL Dump
+    -- version 4.8.3
+    -- https://www.phpmyadmin.net/
+    --
+    -- Hôte : 127.0.0.1:3306
+    -- Généré le :  mar. 19 nov. 2024 à 16:53
+    -- Version du serveur :  5.7.23
+    -- Version de PHP :  7.2.10
+
+    SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+    SET AUTOCOMMIT = 0;
+    START TRANSACTION;
+    SET time_zone = "+00:00";
+
+    -- Base de données :  `devops`
+
+    -- --------------------------------------------------------
+
+    -- Structure de la table `absence`
+    DROP TABLE IF EXISTS `absence`;
+    CREATE TABLE IF NOT EXISTS `absence` (
+      `id` BIGINT NOT NULL AUTO_INCREMENT,
+      `datecreation` DATETIME DEFAULT NULL,
+      `datedebut` DATETIME DEFAULT NULL,
+      `datefin` DATETIME DEFAULT NULL,
+      `description` VARCHAR(255) DEFAULT NULL,
+      `etat` VARCHAR(255) DEFAULT NULL,
+      `titre` VARCHAR(255) DEFAULT NULL,
+      PRIMARY KEY (`id`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+    -- --------------------------------------------------------
+
+    -- Structure de la table `admin`
+    DROP TABLE IF EXISTS `admin`;
+    CREATE TABLE IF NOT EXISTS `admin` (
+      `id` BIGINT NOT NULL AUTO_INCREMENT,
+      `email` VARCHAR(255) NOT NULL UNIQUE,
+      `motdepasse` VARCHAR(255) NOT NULL,
+      `permissions` VARCHAR(255) DEFAULT NULL,
+      `role` VARCHAR(255) DEFAULT NULL,
+      `username` VARCHAR(255) NOT NULL,
+      PRIMARY KEY (`id`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+    -- --------------------------------------------------------
+
+    -- Structure de la table `affectationgroupe`
+    DROP TABLE IF EXISTS `affectationgroupe`;
+    CREATE TABLE IF NOT EXISTS `affectationgroupe` (
+      `id` BIGINT NOT NULL AUTO_INCREMENT,
+      `datecreation` DATETIME DEFAULT NULL,
+      `datemodification` DATETIME DEFAULT NULL,
+      `description` VARCHAR(255) DEFAULT NULL,
+      `etat` VARCHAR(255) DEFAULT NULL,
+      `nom` VARCHAR(255) DEFAULT NULL,
+      `groupe_id` BIGINT DEFAULT NULL,
+      `user_id` BIGINT DEFAULT NULL,
+      PRIMARY KEY (`id`),
+      FOREIGN KEY (`groupe_id`) REFERENCES `groupe`(`id`),
+      FOREIGN KEY (`user_id`) REFERENCES `user`(`id`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+    -- --------------------------------------------------------
+
+    -- Structure de la table `affectationprojet`
+    DROP TABLE IF EXISTS `affectationprojet`;
+    CREATE TABLE IF NOT EXISTS `affectationprojet` (
+      `id` BIGINT NOT NULL AUTO_INCREMENT,
+      `datecreation` DATETIME DEFAULT NULL,
+      `datemodification` DATETIME DEFAULT NULL,
+      `description` VARCHAR(255) DEFAULT NULL,
+      `etat` VARCHAR(255) DEFAULT NULL,
+      `nom` VARCHAR(255) DEFAULT NULL,
+      `projet_id` BIGINT DEFAULT NULL,
+      `user_id` BIGINT DEFAULT NULL,
+      PRIMARY KEY (`id`),
+      FOREIGN KEY (`projet_id`) REFERENCES `projet`(`id`),
+      FOREIGN KEY (`user_id`) REFERENCES `user`(`id`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+    -- --------------------------------------------------------
+
+    -- Structure de la table `user`
+    DROP TABLE IF EXISTS `user`;
+    CREATE TABLE IF NOT EXISTS `user` (
+      `id` BIGINT NOT NULL AUTO_INCREMENT,
+      `datecreation` DATETIME DEFAULT NULL,
+      `email` VARCHAR(255) DEFAULT NULL UNIQUE,
+      `mdp` VARCHAR(255) DEFAULT NULL,
+      `nom` VARCHAR(255) DEFAULT NULL,
+      `prenom` VARCHAR(255) DEFAULT NULL,
+      `statut` VARCHAR(255) DEFAULT NULL,
+      `role_id` BIGINT DEFAULT NULL,
+      PRIMARY KEY (`id`),
+      FOREIGN KEY (`role_id`) REFERENCES `role`(`id`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+    -- --------------------------------------------------------
+
+    -- Structure de la table `role`
+    DROP TABLE IF EXISTS `role`;
+    CREATE TABLE IF NOT EXISTS `role` (
+      `id` BIGINT NOT NULL AUTO_INCREMENT,
+      `profil` VARCHAR(255) DEFAULT NULL,
+      PRIMARY KEY (`id`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+    -- --------------------------------------------------------
+
+    -- Insertion des données pour `role`
+    INSERT INTO `role` (`id`, `profil`) VALUES
+    (1, 'Admin'),
+    (2, 'Utilisateur'),
+    (3, 'Chef');
+
+    -- --------------------------------------------------------
+
+    -- Insertion des données pour `user`
+    INSERT INTO `user` (`id`, `datecreation`, `email`, `mdp`, `nom`, `prenom`, `statut`, `role_id`) VALUES
+    (1, NOW(), 'admin@gmail.com', '$2a$10$zNT0H0YqKHMq7agPPvaeQ.iMcGqhTchqOp5pRZPl3WrHkYeHW5RQa', 'Admin', 'Admin', 'Active', 1),
+    (2, NOW(), 'utilisateur@gmail.com', '$2a$10$3o4fUyxoj34C2WdHgiTGe.j720vB8IIPfMt5GaDM7oYtaO35UonXq', 'Utilisateur', 'Utilisateur', 'Active', 2),
+    (3, NOW(), 'chef@gmail.com', '$2a$10$UNZ
