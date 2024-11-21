@@ -10,4 +10,3 @@ spec:
     requests:
       storage: 500Mi         # Quantité de stockage demandée pour la PVC
   storageClassName: default  # Assurez-vous que le StorageClass est correctement défini, ici par défaut
-slim [ ~/k8s/spring ]$ 
