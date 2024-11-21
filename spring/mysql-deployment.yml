@@ -19,7 +19,7 @@ spec:
         tier: database
     spec:
       containers:
-      - image: mysql:5.7
+      - image: mysql:latest
         name: mysql
         env:
         - name: MYSQL_ROOT_PASSWORD
@@ -47,10 +47,9 @@ spec:
         volumeMounts:
         - name: mysql-persistent-storage
           mountPath: /var/lib/mysql
-          subPath: mysql
         - name: mysql-init
           mountPath: /docker-entrypoint-initdb.d  # Le répertoire où MySQL va chercher les scripts à exécuter
-          subPath: init.sql  # Monté uniquement le fichier init.sql
+          
       volumes:
       - name: mysql-persistent-storage
         persistentVolumeClaim:
@@ -58,3 +57,19 @@ spec:
       - name: mysql-init
         configMap:
           name: mysql-init-script  # Le nom du ConfigMap contenant le script SQL
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql  # DNS name 
+  labels:
+    app: mysql
+    tier: database
+spec:
+  ports:
+    - port: 3306
+      targetPort: 3306
+  selector:       # mysql Pod Should contain same labels
+    app: mysql
+    tier: database
+  clusterIP: None  # We Use DNS, Thus ClusterIP is not relevant
